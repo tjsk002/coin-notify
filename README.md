@@ -1,14 +1,15 @@
 ### 기본 스택
-| Language  | Java |
-|-----------| --- |
+
+| Language  | Java                  |
+|-----------|-----------------------|
 | Framework | Spring Boot + WebFlux |
-| 실시간 전송    | SSE or WebSocket |
-| 빌드        | Gradle |
+| 실시간 전송    | SSE or WebSocket      |
+| 빌드        | Gradle                |
+| 포맷터       | Google Java Format    |
 
 # 요구사항
 
 > 프론트 구성할 필요 없이 백엔드만 개발
->
 
 ### **1. 사용자 관심 종목 등록**
 
