@@ -7,7 +7,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface CoinRepository extends ReactiveCrudRepository<CoinEntity, Long> {
-	@Query("SELECT market FROM coins")
-	Flux<String> findAllMarketNames();
-	Mono<CoinEntity> findByMarket(String market);
+	@Query("SELECT coins FROM coins")
+	Flux<String> findAllNames();
+	Mono<CoinEntity> findByName(String name);
+	Mono<Boolean> existsByNameAndKoreanNameAndEnglishName(String Name, String koreanName, String englishName);
 }

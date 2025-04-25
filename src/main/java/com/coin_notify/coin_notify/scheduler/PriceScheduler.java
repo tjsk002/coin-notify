@@ -1,7 +1,7 @@
 package com.coin_notify.coin_notify.scheduler;
 
 import com.coin_notify.coin_notify.data.entity.RealTimePriceEntity;
-import com.coin_notify.coin_notify.data.repository.CoinRepository;
+import com.coin_notify.coin_notify.data.repository.MarketRepository;
 import com.coin_notify.coin_notify.data.repository.RealTimePriceRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,20 +20,20 @@ import java.net.http.HttpResponse;
 @Component
 public class PriceScheduler implements CommandLineRunner {
 	@Autowired
-	private CoinRepository coinRepository;
+	private MarketRepository marketRepository;
 
 	@Autowired
 	private RealTimePriceRepository realTimePriceRepository;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
-	@Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
 	public void run(String... args) throws Exception {
 		fetchRealTimePrice();
 	}
 
+	@Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
 	public void fetchRealTimePrice() {
-		coinRepository.findAllMarketNames()
+		marketRepository.findAllNames()
 				.collectList()
 				.filter(markets -> !markets.isEmpty())
 				.map(markets -> String.join(",", markets))
@@ -44,7 +44,7 @@ public class PriceScheduler implements CommandLineRunner {
 
 						return Flux.fromIterable(root)
 								.flatMap(node -> {
-									String market = node.get("market").asText();
+									String name = node.get("market").asText();
 									Double tradePrice = node.get("trade_price").asDouble();
 									String tradeDate = node.get("trade_date").asText();
 									String tradeTime = node.get("trade_time").asText();
@@ -65,10 +65,10 @@ public class PriceScheduler implements CommandLineRunner {
 									Double accTradeVolume24h = node.get("acc_trade_volume_24h").asDouble();
 									Long timestamp = node.get("timestamp").asLong();
 
-									return coinRepository.findByMarket(market)
-											.map(coin -> {
+									return marketRepository.findByName(name)
+											.map(market -> {
 												RealTimePriceEntity price = new RealTimePriceEntity();
-												price.setCoinId(coin.getId());
+												price.setMarketId(market.getId());
 												price.setTradePrice(tradePrice);
 												price.setTradeDate(tradeDate);
 												price.setTradeTime(tradeTime);

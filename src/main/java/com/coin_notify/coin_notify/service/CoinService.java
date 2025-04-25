@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -26,10 +27,10 @@ public class CoinService {
 	}
 
 	public Mono<Void> coinCollectionProcess() {
-		return fetchMarketData().flatMap(this::saveMarketData);
+		return fetchCoinData().flatMap(this::saveCoinData);
 	}
 
-	private Mono<JsonNode> fetchMarketData() {
+	private Mono<JsonNode> fetchCoinData() {
 		String url = "https://api.upbit.com/v1/market/all?is_details=true";
 
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).header("accept", "application/json").build();
@@ -44,14 +45,37 @@ public class CoinService {
 		});
 	}
 
-	private Mono<Void> saveMarketData(JsonNode marketData) {
-		return Flux.fromIterable(marketData).map(coin -> {
-			CoinEntity coinEntity = new CoinEntity();
-			coinEntity.setMarket(coin.get("market").asText());
-			coinEntity.setKoreanName(coin.get("korean_name").asText());
-			coinEntity.setEnglishName(coin.get("english_name").asText());
-			System.out.println(coin.get("market_event"));
-			return coinEntity;
-		}).flatMap(coinRepository::save).doOnNext(saved -> System.out.println("Saved: " + saved.getMarket())).doOnError(error -> System.err.println("Error saving: " + error.getMessage())).then();
+	private Mono<Void> saveCoinData(JsonNode marketData) {
+		return Flux.fromIterable(marketData)
+				.publishOn(Schedulers.boundedElastic())
+				.flatMap(data -> {
+					String market = data.get("market").asText();
+					String koreanName = data.get("korean_name").asText();
+					String englishName = data.get("english_name").asText();
+					String coinSymbol = market.split("-")[1];
+
+					return coinRepository.existsByNameAndKoreanNameAndEnglishName(coinSymbol, koreanName, englishName)
+							.flatMap(exists -> {
+								if (Boolean.TRUE.equals(exists)) {
+									// 중복 발견 시, 에러를 무시하고 계속 처리
+									System.out.println("Duplicate found, skipping: " + coinSymbol + " | " + koreanName + " | " + englishName);
+									return Mono.empty();
+								} else {
+									CoinEntity coinEntity = new CoinEntity();
+									coinEntity.setName(coinSymbol);
+									coinEntity.setKoreanName(koreanName);
+									coinEntity.setEnglishName(englishName);
+
+									return coinRepository.save(coinEntity)
+											.doOnSuccess(saved -> System.out.println("Saved: " + saved.getName()));
+								}
+							})
+							.onErrorResume(error -> {
+								System.err.println("Error occurred: " + error.getMessage());
+								return Mono.empty();
+							});
+				})
+				.doOnError(error -> System.err.println("Error during saving: " + error.getMessage()))
+				.then();
 	}
 }

@@ -8,8 +8,8 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Getter
 @Setter
-@Table("coins")
-public class CoinEntity extends BasicEntity {
+@Table("markets")
+public class MarketEntity extends BasicEntity {
     @Id
     private Long id;
 

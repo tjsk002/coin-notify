@@ -13,8 +13,8 @@ public class RealTimePriceEntity extends BasicEntity {
 	@Id
 	private Long id;
 
-	@Column("coin_id")
-	private Long coinId;
+	@Column("market_id")
+	private Long marketId;
 
 	@Column("trade_date") // 최근 거래 일자 (UTC)
 	private String tradeDate;
