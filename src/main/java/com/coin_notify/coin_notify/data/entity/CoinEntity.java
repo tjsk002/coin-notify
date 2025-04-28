@@ -13,12 +13,15 @@ public class CoinEntity extends BasicEntity {
     @Id
     private Long id;
 
-    @Column("name")
-    private String name;
+    @Column("symbol")
+    private String symbol;
 
     @Column("korean_name")
     private String koreanName;
 
     @Column("english_name")
     private String englishName;
+
+    @Column("like_count")
+    private Integer likeCount;
 }

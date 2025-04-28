@@ -51,11 +51,11 @@ public class MarketService {
 		return Flux.fromIterable(marketData).map(data -> {
 			System.out.println(data);
 			MarketEntity marketEntity = new MarketEntity();
-			marketEntity.setName(data.get("market").asText());
+			marketEntity.setMarketCode(data.get("market").asText());
 			marketEntity.setKoreanName(data.get("korean_name").asText());
 			marketEntity.setEnglishName(data.get("english_name").asText());
 			System.out.println(data.get("market_event"));
 			return marketEntity;
-		}).flatMap(marketRepository::save).doOnNext(saved -> System.out.println("Saved: " + saved.getName())).doOnError(error -> System.err.println("Error saving: " + error.getMessage())).then();
+		}).flatMap(marketRepository::save).doOnNext(saved -> System.out.println("Saved: " + saved.getMarketCode())).doOnError(error -> System.err.println("Error saving: " + error.getMessage())).then();
 	}
 }

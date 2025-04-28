@@ -7,7 +7,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface MarketRepository extends ReactiveCrudRepository<MarketEntity, Long> {
-	@Query("SELECT name FROM markets")
-	Flux<String> findAllNames();
-	Mono<MarketEntity> findByName(String name);
+	@Query("SELECT market_code FROM markets")
+	Flux<String> findAllMarketCodes();
+	Mono<MarketEntity> findByMarketCode(String marketCode);
 }

@@ -33,7 +33,7 @@ public class PriceScheduler implements CommandLineRunner {
 
 	@Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
 	public void fetchRealTimePrice() {
-		marketRepository.findAllNames()
+		marketRepository.findAllMarketCodes()
 				.collectList()
 				.filter(markets -> !markets.isEmpty())
 				.map(markets -> String.join(",", markets))
@@ -65,7 +65,7 @@ public class PriceScheduler implements CommandLineRunner {
 									Double accTradeVolume24h = node.get("acc_trade_volume_24h").asDouble();
 									Long timestamp = node.get("timestamp").asLong();
 
-									return marketRepository.findByName(name)
+									return marketRepository.findByMarketCode(name)
 											.map(market -> {
 												RealTimePriceEntity price = new RealTimePriceEntity();
 												price.setMarketId(market.getId());

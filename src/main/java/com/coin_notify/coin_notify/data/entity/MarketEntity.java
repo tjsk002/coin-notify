@@ -13,8 +13,8 @@ public class MarketEntity extends BasicEntity {
     @Id
     private Long id;
 
-    @Column("name")
-    private String name;
+    @Column("market_code")
+    private String marketCode;
 
     @Column("korean_name")
     private String koreanName;

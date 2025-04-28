@@ -1,7 +1,7 @@
 CREATE TABLE coins
 (
     id           SERIAL PRIMARY KEY,
-    name         VARCHAR(255) UNIQUE,
+    symbol       VARCHAR(255) UNIQUE,
     korean_name  VARCHAR(255),
     english_name VARCHAR(255),
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -12,7 +12,7 @@ CREATE TABLE coins
 CREATE TABLE markets
 (
     id           SERIAL PRIMARY KEY,
-    name         VARCHAR(255) UNIQUE,
+    market_code  VARCHAR(255) UNIQUE,
     korean_name  VARCHAR(255),
     english_name VARCHAR(255),
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
