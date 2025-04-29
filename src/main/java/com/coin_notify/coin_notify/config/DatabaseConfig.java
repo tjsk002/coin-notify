@@ -15,7 +15,7 @@ public class DatabaseConfig {
 		ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
 		initializer.setConnectionFactory(connectionFactory);
 
-		ResourceDatabasePopulator populator = new ResourceDatabasePopulator(new ClassPathResource("db/data.sql"));
+		ResourceDatabasePopulator populator = new ResourceDatabasePopulator(new ClassPathResource("db/schema.sql"));
 		initializer.setDatabasePopulator(populator);
 
 		return initializer;

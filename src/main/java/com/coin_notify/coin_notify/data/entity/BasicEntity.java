@@ -5,14 +5,14 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class BasicEntity {
     @CreatedDate
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
     @LastModifiedDate
-    private Timestamp updatedAt;
-    private Timestamp deletedAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 }
