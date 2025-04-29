@@ -49,12 +49,10 @@ public class MarketService {
 
 	private Mono<Void> saveMarketData(JsonNode marketData) {
 		return Flux.fromIterable(marketData).map(data -> {
-			System.out.println(data);
 			MarketEntity marketEntity = new MarketEntity();
 			marketEntity.setMarketCode(data.get("market").asText());
 			marketEntity.setKoreanName(data.get("korean_name").asText());
 			marketEntity.setEnglishName(data.get("english_name").asText());
-			System.out.println(data.get("market_event"));
 			return marketEntity;
 		}).flatMap(marketRepository::save).doOnNext(saved -> System.out.println("Saved: " + saved.getMarketCode())).doOnError(error -> System.err.println("Error saving: " + error.getMessage())).then();
 	}
