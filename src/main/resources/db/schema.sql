@@ -64,31 +64,29 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS like_coins
 (
     id         SERIAL PRIMARY KEY,
-    user_id    BIGINT  NOT NULL,                           -- 사용자 ID
-    coin_id    BIGINT  NOT NULL,                           -- 코인 심볼
-    is_active  BOOLEAN NOT NULL DEFAULT FALSE,             -- 좋아요 활성화
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP, -- 생성 일시
-    updated_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP, -- 수정 일시
-    deleted_at TIMESTAMP        DEFAULT NULL,              -- 삭제 일시
-    UNIQUE (user_id, coin_id),                             -- 중복 저장 방지
+    user_id    BIGINT NOT NULL,                     -- 사용자 ID
+    coin_id    BIGINT NOT NULL,                     -- 코인 심볼
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성 일시
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 수정 일시
+    deleted_at TIMESTAMP DEFAULT NULL,              -- 삭제 일시
+    UNIQUE (user_id, coin_id),                      -- 중복 저장 방지
     CONSTRAINT fk_user FOREIGN KEY (user_id)
-        REFERENCES users (id) ON DELETE CASCADE,           -- users 테이블에 FK 연결
+        REFERENCES users (id) ON DELETE CASCADE,    -- users 테이블에 FK 연결
     CONSTRAINT fk_coin FOREIGN KEY (coin_id)
-        REFERENCES coins (id) ON DELETE CASCADE            -- coins 테이블에 FK 연결
+        REFERENCES coins (id) ON DELETE CASCADE     -- coins 테이블에 FK 연결
 );
 
 CREATE TABLE IF NOT EXISTS like_markets
 (
     id         SERIAL PRIMARY KEY,
-    user_id    BIGINT  NOT NULL,                           -- 사용자 ID
-    market_id  BIGINT  NOT NULL,                           -- 마켓 이름 (예: 'KRW-BTC' 등)
-    is_active  BOOLEAN NOT NULL DEFAULT FALSE,             -- 좋아요 활성화
-    created_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP, -- 생성 일시
-    updated_at TIMESTAMP        DEFAULT CURRENT_TIMESTAMP, -- 수정 일시
-    deleted_at TIMESTAMP        DEFAULT NULL,              -- 삭제 일시
-    UNIQUE (user_id, market_id),                           -- 중복 저장 방지
+    user_id    BIGINT NOT NULL,                     -- 사용자 ID
+    market_id  BIGINT NOT NULL,                     -- 마켓 이름 (예: 'KRW-BTC' 등)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성 일시
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 수정 일시
+    deleted_at TIMESTAMP DEFAULT NULL,              -- 삭제 일시
+    UNIQUE (user_id, market_id),                    -- 중복 저장 방지
     CONSTRAINT fk_user FOREIGN KEY (user_id)
-        REFERENCES users (id) ON DELETE CASCADE,           -- users 테이블에 FK 연결
+        REFERENCES users (id) ON DELETE CASCADE,    -- users 테이블에 FK 연결
     CONSTRAINT fk_market FOREIGN KEY (market_id)
-        REFERENCES markets (id) ON DELETE CASCADE          -- markets 테이블에 FK 연결
+        REFERENCES markets (id) ON DELETE CASCADE   -- markets 테이블에 FK 연결
 );

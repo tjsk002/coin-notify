@@ -18,7 +18,4 @@ public class LikeCoinEntity extends BasicEntity {
 
 	@Column("coin_id")
 	private Long coinId;
-
-	@Column("is_active")
-	private Boolean isActive;
 }
