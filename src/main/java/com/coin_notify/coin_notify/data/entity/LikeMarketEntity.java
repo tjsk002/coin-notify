@@ -19,8 +19,6 @@ public class LikeMarketEntity extends BasicEntity {
 	@Column("market_id")
 	private Long marketId;
 
-	@Override
-	public String toString() {
-		return "데이터 확인 : {" + "marketId=" + marketId + '}';
-	}
+	@Column("is_active")
+	private Boolean isActive;
 }
