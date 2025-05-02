@@ -21,9 +21,4 @@ public class MarketEntity extends BasicEntity {
 
     @Column("english_name")
     private String englishName;
-
-    @Override
-    public String toString() {
-        return "데이터 확인 : {" + "marketCode=" + marketCode +  ", koreanName=" + koreanName + '}';
-    }
 }
