@@ -10,7 +10,4 @@ public interface MarketRepository extends ReactiveCrudRepository<MarketEntity, L
 	@Query("SELECT market_code FROM markets")
 	Flux<String> findAllMarketCodes();
 	Mono<MarketEntity> findByMarketCode(String marketCode);
-
-	@Query("SELECT * FROM markets WHERE id = :marketId")
-	Mono<MarketEntity> findByMarketId(Long marketId);
 }
