@@ -4,7 +4,7 @@ import com.coin_notify.coin_notify.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
@@ -19,7 +19,7 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping("/")
+	@PostMapping("/")
 	public Mono<ResponseEntity<UUID>> setupUserSession(HttpServletRequest request) {
 		return userService.setupUserSession(request)
 				.map(ResponseEntity::ok);

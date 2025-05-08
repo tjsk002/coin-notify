@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+}
+
+.section {
+    flex: 1;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.like-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.like-button:hover {
+    background-color: #45a049;
+}
+
+.like-button.active {
+    background-color: #ff5722;
+}
+
+.market-item, .coin-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.market-item span, .coin-item span {
+    margin-left: 10px;
+}
+
+.like-button {
+    order: -1;
+}

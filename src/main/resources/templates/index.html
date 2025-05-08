@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>INDEX</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<h1>INDEX</h1>
+
+<div id="messages"></div>
+
+<div class="container">
+    <div class="section">
+        <h2>종목(Market) 목록</h2>
+        <div id="market-list"></div>
+    </div>
+
+    <div class="section">
+        <h2>코인(Coin) 목록</h2>
+        <div id="coin-list"></div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        fetch('/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                const uuid = data;
+                localStorage.setItem('uuid', uuid);
+
+                const messageDiv = document.getElementById('messages');
+                const message = document.createElement('p');
+                message.textContent = `임의 회원 성공입니다. User Session ID: ${uuid}`;
+                messageDiv.appendChild(message);
+
+                const eventSource = new EventSource(`/sse/${uuid}`);
+                eventSource.onmessage = function(event) {
+                    console.log("SSE 메시지 수신:", event.data);
+
+                    const message = document.createElement('p');
+                    const now = new Date().toLocaleTimeString();
+                    message.textContent = `[실시간 알림 - ${now}] ${event.data}`;
+
+                    message.classList.add('alert-message');
+                    messageDiv.appendChild(message);
+                };
+
+                eventSource.onerror = function(error) {
+                    console.error("SSE 연결 오류:", error);
+                    eventSource.close();
+                };
+
+                fetch('/market-list')
+                    .then(response => response.json())
+                    .then(data => {
+                        const marketListDiv = document.getElementById('market-list');
+                        if (data && data.resultData) {
+                            const marketList = data.resultData;
+                            const ul = document.createElement('ul');
+                            marketList.forEach(market => {
+                                const li = document.createElement('li');
+                                li.classList.add('market-item');
+
+                                const likeButton = document.createElement('button');
+                                likeButton.classList.add('like-button');
+                                likeButton.textContent = '좋아요';
+                                if(market.likeMarkets && market.likeMarkets.isActive) {
+                                    likeButton.classList.add('active');
+                                }
+
+                                likeButton.addEventListener('click', function () {
+                                    const marketId = market.id;
+
+                                    fetch(`/api/markets/like/${marketId}`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        }
+                                    })
+                                        .then(response => response.json())
+                                        .then(responseData => {
+                                            if (responseData.resultCode === "A200") {
+                                                if (responseData.resultData === 'true') {
+                                                    likeButton.classList.add('active');
+                                                } else {
+                                                    likeButton.classList.remove('active');
+                                                }
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                        });
+                                });
+
+                                const marketInfo = document.createElement('span');
+                                marketInfo.textContent = `Market: ${market.market}, Korean Name: ${market.koreanName}, English Name: ${market.englishName}`;
+
+                                li.appendChild(likeButton);
+                                li.appendChild(marketInfo);
+                                ul.appendChild(li);
+                            });
+                            marketListDiv.appendChild(ul);
+                        } else {
+                            marketListDiv.textContent = 'No markets available.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching market list:', error);
+                    });
+
+
+                fetch('/coin-list')
+                    .then(response => response.json())
+                    .then(data => {
+                        const coinListDiv = document.getElementById('coin-list');
+                        if (data && data.resultData) {
+                            const coinList = data.resultData;
+                            const ul = document.createElement('ul');
+                            coinList.forEach(coin => {
+                                const li = document.createElement('li');
+                                li.classList.add('coin-item');
+
+                                const likeButton = document.createElement('button');
+                                likeButton.classList.add('like-button');
+                                likeButton.textContent = '좋아요';
+                                if(coin.likeCoins && coin.likeCoins.isActive) {
+                                    likeButton.classList.add('active');
+                                }
+
+                                likeButton.addEventListener('click', function () {
+                                    const coinId = coin.id;
+
+                                    fetch(`/api/coins/like/${coinId}`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        }
+                                    })
+                                        .then(response => response.json())
+                                        .then(responseData => {
+                                            if (responseData.resultCode === "A200") {
+                                                if (responseData.resultData === 'true') {
+                                                    likeButton.classList.add('active');
+                                                } else {
+                                                    likeButton.classList.remove('active');
+                                                }
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                        });
+                                });
+
+                                const coinInfo = document.createElement('span');
+                                console.log("coin info " + coinInfo);
+                                coinInfo.textContent = `Coin : ${coin.symbol}, Korean Name: ${coin.koreanName}, English Name: ${coin.englishName}`;
+
+                                li.appendChild(likeButton);
+                                li.appendChild(coinInfo);
+                                ul.appendChild(li);
+                            });
+                            coinListDiv.appendChild(ul);
+                        } else {
+                            coinListDiv.textContent = 'No coins available.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching coin list:', error);
+                    });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+</script>
+</body>
+</html>

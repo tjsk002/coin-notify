@@ -92,3 +92,16 @@ CREATE TABLE IF NOT EXISTS like_markets
     CONSTRAINT fk_market FOREIGN KEY (market_id)
         REFERENCES markets (id) ON DELETE CASCADE          -- markets 테이블에 FK 연결
 );
+
+CREATE TABLE IF NOT EXISTS notifications
+(
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    BIGINT NOT NULL,
+    market_id  BIGINT NOT NULL,
+    log        TEXT   NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (market_id) REFERENCES markets (id) ON DELETE CASCADE
+);
