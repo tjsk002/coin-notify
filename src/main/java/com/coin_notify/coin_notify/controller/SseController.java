@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 public class SseController {
-    private final Sinks.Many<ServerSentEvent<String>> sink;
+    public final Sinks.Many<ServerSentEvent<String>> sink;
     private final PriceScheduler priceScheduler;
 
     public SseController(PriceScheduler priceScheduler) {
