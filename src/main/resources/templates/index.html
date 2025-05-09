@@ -99,7 +99,7 @@
                                 });
 
                                 const marketInfo = document.createElement('span');
-                                marketInfo.textContent = `Market: ${market.market}, Korean Name: ${market.koreanName}, English Name: ${market.englishName}`;
+                                marketInfo.textContent = `${market.id} ${market.market}, Korean Name: ${market.koreanName}, English Name: ${market.englishName}`;
 
                                 li.appendChild(likeButton);
                                 li.appendChild(marketInfo);
@@ -158,8 +158,7 @@
                                 });
 
                                 const coinInfo = document.createElement('span');
-                                console.log("coin info " + coinInfo);
-                                coinInfo.textContent = `Coin : ${coin.symbol}, Korean Name: ${coin.koreanName}, English Name: ${coin.englishName}`;
+                                coinInfo.textContent = `${coin.id} ${coin.symbol}, Korean Name: ${coin.koreanName}, English Name: ${coin.englishName}`;
 
                                 li.appendChild(likeButton);
                                 li.appendChild(coinInfo);
